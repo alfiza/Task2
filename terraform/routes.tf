@@ -24,22 +24,22 @@ resource "aws_route_table" "private" {
     }
 }
 
-Resource "aws_route_table_association" "private_zone1" {
+resource "aws_route_table_association" "private_zone1" {
     subnet_id = aws_subnet.private_zone1.id
     route_table_id = aws_route_table.private.id
 }
 
-Resource "aws_route_table_association" "private_zone2" {
+resource "aws_route_table_association" "private_zone2" {
     subnet_id = aws_subnet.private_zone2.id
     route_table_id = aws_route_table.private.id
 }
 
-Resource "aws_route_table_association" "public_zone1" {
+resource "aws_route_table_association" "public_zone1" {
     subnet_id = aws_subnet.public_zone1.id
     route_table_id = aws_route_table.public.id
 }
 
-Resource "aws_route_table_association" "public_zone2" {
+resource "aws_route_table_association" "public_zone2" {
     subnet_id = aws_subnet.public_zone2.id
     route_table_id = aws_route_table.public.id
 }
