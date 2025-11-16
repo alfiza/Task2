@@ -9,18 +9,18 @@ resource "aws_route_table" "private" {
     tags = {
         Name = "${local.env}-private"
     }
+}
 
-    resource "aws_route_table" "public" {
-        vpc_id = aws_vpc.main.id
+resource "aws_route_table" "public" {
+    vpc_id = aws_vpc.main.id
 
-        route {
-            cidr_block = "0.0.0.0/0"
-            gateway_id = aws_internet_gateway.internetGateway.id
-        }
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.internetGateway.id
+    }
 
-        tags = {
-            Name = "${local.env}-public"
-        }
+    tags = {
+        Name = "${local.env}-public"
     }
 }
 
