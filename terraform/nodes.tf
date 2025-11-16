@@ -29,7 +29,7 @@ resource "aws_iam_role_policy_attachment" "amazon_eks_cni_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "amazon_ec2_container_registry_read_only" {
-    policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegisteryReadOnly"
+    policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
     role = aws_iam_role.nodes.name
 }
 
@@ -41,12 +41,13 @@ resource "aws_eks_node_group" "general" {
     node_role_arn = aws_iam_role.nodes.arn
 
     subnet_ids = [
+
         aws_subnet.private_zone1.id,
         aws_subnet.private_zone2.id
     ]
     
     capacity_type = "ON_DEMAND"
-    instance_types = ["t3.large"]
+    instance_types = ["t3.micro"]
 
     scaling_config {
         desired_size = 1
@@ -71,6 +72,6 @@ resource "aws_eks_node_group" "general" {
     # allow external changes witrhoput Terraform plan diffrence
     
     lifecycle {
-        ignore_changes = [scalling_config[0].desired_size]
+        ignore_changes = [scaling_config[0].desired_size]
     }
 }
