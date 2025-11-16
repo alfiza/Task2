@@ -3,7 +3,7 @@ resource "aws_iam_role" "eks" {
 
     assume_role_policy = <<POLICY
     {
-        "Version" = "2012-10-17",
+        "Version" : "2012-10-17",
         "Statement" : [
             {
                 "Effect": "Allow",
@@ -29,7 +29,7 @@ resource "aws_eks_cluster" "eks" {
 
     vpc_config {
         endpoint_private_access = false
-        endpoint_private_access = true
+        endpoint_public_access = true
 
         subnet_ids = [
             aws_subnet.private_zone1.id,
