@@ -1,8 +1,5 @@
-Add-Content .gitignore @"
-# Terraform files to ignore
+# Terraform
+.terraform/
 *.tfstate
 *.tfstate.*
-.terraform/
-.terraform.lock.hcl
 *.backup
-"@
