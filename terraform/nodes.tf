@@ -34,29 +34,30 @@ resource "aws_iam_role_policy_attachment" "amazon_ec2_container_registry_read_on
 }
 
 
+# Worker nodes
 resource "aws_eks_node_group" "general" {
   cluster_name    = aws_eks_cluster.eks.name
   version         = local.eks_version
   node_group_name = "general"
   node_role_arn   = aws_iam_role.nodes.arn
 
+  # workers nodes in private subnets (secure)
   subnet_ids = [
-
     aws_subnet.private_zone1.id,
     aws_subnet.private_zone2.id
   ]
 
-  capacity_type  = "ON_DEMAND"
-  instance_types = ["t3.micro"]
-
+  capacity_type  = "ON_DEMAND"    # Regular instances
+  instance_types = ["t3.micro"]   
+  # How many worker nodes
   scaling_config {
-    desired_size = 1
-    max_size     = 10
-    min_size     = 0
+    desired_size = 1   # Start with 1
+    max_size     = 10  # Can grow to 10
+    min_size     = 0   # Can shrink to 0
   }
 
   update_config {
-    max_unavailable = 1
+    max_unavailable = 1  # Update 1 node at a time
   }
 
   labels = {
@@ -69,8 +70,7 @@ resource "aws_eks_node_group" "general" {
     aws_iam_role_policy_attachment.amazon_ec2_container_registry_read_only,
   ]
 
-  # allow external changes witrhoput Terraform plan diffrence
-
+  # Let autoscaler change size without Terraform complaining
   lifecycle {
     ignore_changes = [scaling_config[0].desired_size]
   }

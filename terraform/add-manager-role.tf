@@ -38,7 +38,9 @@ resource "aws_iam_policy" "eks_admin" {
                 "Action": "iam:PassRole",
                 "Resource": "*",
                 "Condition": {
-                    "iam:PassedToService": "eks.amazonaws.com" 
+                    "StringEquals": {
+                        "iam:PassedToService": "eks.amazonaws.com"
+                    }
                 }
             }
         ]

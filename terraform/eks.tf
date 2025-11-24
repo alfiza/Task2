@@ -1,6 +1,8 @@
+# Permission role for EKS to manage the cluster
 resource "aws_iam_role" "eks" {
-  name = "${local.env}-${local.eks_name}-eks-cluster"
+  name = "${local.env}-${local.eks_name}-${local.student_id}-eks-cluster"
 
+  # Allow EKS service to use this role
   assume_role_policy = <<POLICY
     {
         "Version" : "2012-10-17",
@@ -22,20 +24,24 @@ resource "aws_iam_role_policy_attachment" "eks" {
   role       = aws_iam_role.eks.name
 }
 
+# Main Kubernetes cluster 
 resource "aws_eks_cluster" "eks" {
-  name     = "${local.env}-${local.eks_name}"
+  name     = "${local.env}-${local.eks_name}-${local.student_id}"  
   version  = local.eks_version
   role_arn = aws_iam_role.eks.arn
 
   vpc_config {
-    endpoint_private_access = false
-    endpoint_public_access  = true
+    endpoint_private_access = true              # Internal access
+    endpoint_public_access  = true              # External kubectl access
+    public_access_cidrs     = ["0.0.0.0/0"]    # restrict this in production
 
+    # Put cluster in private subnets for security
     subnet_ids = [
       aws_subnet.private_zone1.id,
       aws_subnet.private_zone2.id
     ]
   }
+  
   access_config {
     authentication_mode                         = "API"
     bootstrap_cluster_creator_admin_permissions = true
