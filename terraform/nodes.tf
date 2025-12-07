@@ -48,13 +48,14 @@ resource "aws_eks_node_group" "general" {
   ]
 
   capacity_type  = "ON_DEMAND"    # Regular instances
-  instance_types = ["t3.micro"]   
+  instance_types = ["t3.small"]   
   # How many worker nodes
   scaling_config {
-    desired_size = 1   # Start with 1
-    max_size     = 10  # Can grow to 10
-    min_size     = 0   # Can shrink to 0
+    desired_size = 2
+    max_size     = 3
+    min_size     = 1
   }
+
 
   update_config {
     max_unavailable = 1  # Update 1 node at a time
@@ -69,6 +70,7 @@ resource "aws_eks_node_group" "general" {
     aws_iam_role_policy_attachment.amazon_eks_cni_policy,
     aws_iam_role_policy_attachment.amazon_ec2_container_registry_read_only,
   ]
+
 
   # Let autoscaler change size without Terraform complaining
   lifecycle {

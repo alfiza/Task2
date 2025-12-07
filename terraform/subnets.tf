@@ -1,7 +1,7 @@
 # Private subnet - secure area for worker nodes (no internet access)
 resource "aws_subnet" "private_zone1" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.0.0/19"  # 8,192 IPs
+  cidr_block        = "10.0.10.0/24"  # 8,192 IPs
   availability_zone = local.zone1
 
   tags = {
@@ -13,7 +13,7 @@ resource "aws_subnet" "private_zone1" {
 
 resource "aws_subnet" "private_zone2" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.32.0/19"
+  cidr_block        = "10.0.20.0/24"
   availability_zone = local.zone2
 
   tags = {
@@ -26,7 +26,7 @@ resource "aws_subnet" "private_zone2" {
 # Public subnet
 resource "aws_subnet" "public_zone1" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.64.0/19"  # 8,192 IPs
+  cidr_block              = "10.0.1.0/24"  # 8,192 IPs
   availability_zone       = local.zone1
   map_public_ip_on_launch = true
 
@@ -40,7 +40,7 @@ resource "aws_subnet" "public_zone1" {
 
 resource "aws_subnet" "public_zone2" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.96.0/19"
+  cidr_block              = "10.0.2.0/24"
   availability_zone       = local.zone2
   map_public_ip_on_launch = true
 

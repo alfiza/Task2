@@ -31,16 +31,16 @@ resource "aws_eks_cluster" "eks" {
   role_arn = aws_iam_role.eks.arn
 
   vpc_config {
-    endpoint_private_access = true              # Internal access
-    endpoint_public_access  = true              # External kubectl access
-    public_access_cidrs     = ["0.0.0.0/0"]    # restrict this in production
-
-    # Put cluster in private subnets for security
     subnet_ids = [
       aws_subnet.private_zone1.id,
       aws_subnet.private_zone2.id
     ]
+
+    security_group_ids = [
+      aws_security_group.nodes_sg.id
+    ]
   }
+
   
   access_config {
     authentication_mode                         = "API"

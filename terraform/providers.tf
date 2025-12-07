@@ -1,30 +1,25 @@
-# Required providers and versions for EKS
-terraform {
-  required_version = ">= 1.0"
-
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 6.12.0"
-      # AWS provider for EKS, VPC, IAM resources
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.7"
-    }
-
-  }
+# Get cluster info
+data "aws_eks_cluster" "cluster" {
+  name = aws_eks_cluster.eks.name
 }
 
-provider "aws" {
-  region = local.region
+data "aws_eks_cluster_auth" "cluster" {
+  name = aws_eks_cluster.eks.name
 }
 
-# AWS Provider configuration
+# Kubernetes provider (NO depends_on allowed)
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.cluster.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+}
+
+# Helm provider (NO depends_on allowed)
 provider "helm" {
-  kubernetes {
-    config_path = "~/.kube/config"
+  kubernetes = {
+    host                   = data.aws_eks_cluster.cluster.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.cluster.token
   }
 }
-
 
